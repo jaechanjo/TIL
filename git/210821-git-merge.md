@@ -4,7 +4,7 @@
 	- **merge** spiderman.md commits
 	(rf. TM=TobeyMaguire/AG=AndrewGarfield/TH=TomHoland)
 
-	![Merge Network diagram](.\img\P1-Merge.PNG)
+	![Merge Network diagram](git/img/P1-Merge.PNG)
 
 	- **image** make diretory in github
 	: it is convenient to take any image link
