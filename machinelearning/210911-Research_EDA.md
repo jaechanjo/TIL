@@ -26,7 +26,7 @@
 
 	- df.head(): Understand each meanings
 
-![head](TIL/img/210911/head.png)
+![head](C:\Users\jjc12\Desktop\I\Data Analyst\Python\MachineLearning\images\head.png)
 
 	- df.info(): non-null & int64, object
 
