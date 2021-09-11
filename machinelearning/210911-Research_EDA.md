@@ -26,15 +26,15 @@
 
 	- df.head(): Understand each meanings
 
-![head][TIL/img/210911/head.png]
+![head](TIL/img/210911/head.png)
 
 	- df.info(): non-null & int64, object
 
-![info][TIL/img/210911/info.png]
+![info](TIL/img/210911/info.png)
 
 	- df.describe(): well-uniformed distribution
 
-![describe][TIL/img/210911/describe.PNG]
+![describe](TIL/img/210911/describe.PNG)
 			
 	- \*``rename : `df_rnm = df.rename(columns={'NationalIty' : 'nationality'})``
 			
@@ -43,19 +43,19 @@
 
 	sns.histplot(x='raisedhands', data=df, hue='Class', hue_order=['H', 'M', 'L'], kde=True)
 
-![raisedhands][TIL/img/210911/raisedhands.png]
+![raisedhands](TIL/img/210911/raisedhands.png)
 
 `sns.histplot(x='VisITedResources', data=df, hue='Class', hue_order=['H', 'M', 'L'], kde=True)`
 
-![visitedsource][TIL/img/210911/visitedsource.png]
+![visitedsource](TIL/img/210911/visitedsource.png)
 
 `sns.jointplot(x='VisITedResources', y='raisedhands', data=df, hue='Class', hue_order=['H','M','L'])`
 
-![jointplot][TIL/img/210911/jointplot.png]
+![jointplot](TIL/img/210911/jointplot.png)
 
 `sns.pairplot(data=df, hue='Class', hue_order=['H','M','L'])`
 
-![pairplot][TIL/img/210911/pairplot.png]
+![pairplot](TIL/img/210911/pairplot.png)
 
 ## To Do
 
