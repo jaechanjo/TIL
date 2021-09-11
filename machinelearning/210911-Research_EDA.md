@@ -34,7 +34,7 @@
 
 	- df.describe(): well-uniformed distribution
 
-![describe][TIL/img/210911/describe.png]
+![describe][TIL/img/210911/describe.PNG]
 			
 	- \*``rename : `df_rnm = df.rename(columns={'NationalIty' : 'nationality'})``
 			
