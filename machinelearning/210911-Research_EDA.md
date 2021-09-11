@@ -26,15 +26,15 @@
 
 	- df.head(): Understand each meanings
 
-![head][C:\Users\jjc12\Desktop\I\Data Analyst\Python\MachineLearning\images\head.PNG]
+![head][./img/210911/head.png]
 
 	- df.info(): non-null & int64, object
 
-![info][C:\Users\jjc12\Desktop\I\Data Analyst\Python\MachineLearning\images\info.PNG]
+![info][./img/210911/info.png]
 
 	- df.describe(): well-uniformed distribution
 
-![describe][C:\Users\jjc12\Desktop\I\Data Analyst\Python\MachineLearning\images\describe.PNG]
+![describe][./img/210911/describe.png]
 			
 	- \*``rename : `df_rnm = df.rename(columns={'NationalIty' : 'nationality'})``
 			
@@ -43,19 +43,19 @@
 
 	sns.histplot(x='raisedhands', data=df, hue='Class', hue_order=['H', 'M', 'L'], kde=True)
 
-![raisedhands][C:\Users\jjc12\Desktop\I\Data Analyst\Python\MachineLearning\images\raisedhand.PNG]
+![raisedhands][./img/210911/raisedhands.png]
 
 `sns.histplot(x='VisITedResources', data=df, hue='Class', hue_order=['H', 'M', 'L'], kde=True)`
 
-![visitedsource][C:\Users\jjc12\Desktop\I\Data Analyst\Python\MachineLearning\images\visitedsource.PNG]
+![visitedsource][./img/210911/visitedsource.png]
 
-	sns.jointplot(x='VisITedResources', y='raisedhands', data=df, hue='Class', hue_order=['H','M','L'])
+`sns.jointplot(x='VisITedResources', y='raisedhands', data=df, hue='Class', hue_order=['H','M','L'])`
 
-![jointplot][C:\Users\jjc12\Desktop\I\Data Analyst\Python\MachineLearning\images\jointplot.PNG]
+![jointplot][./img/210911/jointplot.png]
 
 `sns.pairplot(data=df, hue='Class', hue_order=['H','M','L'])`
 
-![pairplot][C:\Users\jjc12\Desktop\I\Data Analyst\Python\MachineLearning\images\pairplot.PNG]
+![pairplot][./img/210911/pairplot.png]
 
 ## To Do
 
