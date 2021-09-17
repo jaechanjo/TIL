@@ -32,7 +32,7 @@
 
 > #### HTML (Hyper Text Markdown Language)
 
-> > > <ul> <li> <tag class = 'class_name1 class_name2' id = '1234' href = 'link'>text</tag> </li> </ul>
+> > > "<ul> <li> <tag class = 'class_name1 class_name2' id = '1234' href = 'link'>text</tag> </li> </ul>"
 
 > > html.select(tag.class_name1 or 2) , html.select(tag#1234)
 
@@ -48,13 +48,13 @@
 > > > 4. 400 - User's request fault
 > > > 5. 500 - Server Problem
 
-	if response.status_code == requests.code.ok:
+> > ``if response.status_code == requests.code.ok:
 
-		Crawling
+> >		Crawling
 
-	else:
+> >	else:
 
-		Fail Crawling
+> >		Fail Crawling``
 
 ## To Do
 
