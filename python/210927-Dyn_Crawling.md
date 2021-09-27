@@ -33,13 +33,15 @@ data[0]['ranks']`
 	6. process and extract wanted data
 
 
-### strip()
-: extract only text from data mixed with blank or etc
+> > strip()
 
-### reshape(-1) vs reshape(-1, 6)
-: Former means transposition of axis, but -1 of latter means automatic match
+- extract only text from data mixed with blank or etc
 
-### input list into empty dataframe
+> > reshape(-1) vs reshape(-1, 6)
+-  Former means transposition of axis, but -1 of latter means automatic match
+
+> > input list into empty dataframe
+
 `df = pd.DataFrame(columns=['A', 'B']
 
 df[A] = list_A
