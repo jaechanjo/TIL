@@ -42,9 +42,6 @@ data[0]['ranks']`
 
 > > input list into empty dataframe
 
-`df = pd.DataFrame(columns=['A', 'B']
-
-df[A] = list_A
-df[B] = list_B
-
-df`
+``df = pd.DataFrame(columns=['A', 'B'] 
+df[A] = list_A 
+df[B] = list_B``
