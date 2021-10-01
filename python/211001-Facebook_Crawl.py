@@ -3,21 +3,22 @@ t_search = pd.DataFrame(index = tag_list,
 
 
 
-#페이스북 로그인 페이지로
+    # 페이스북 로그인 페이지로
+
 driver = webdriver.Chrome('./chromedriver')
 
 url = 'https://www.facebook.com/'
 driver.get(url)
 time.sleep(2)
 
-# 로그인 완료
+    # 로그인 완료
 
 driver.find_element_by_xpath('//*[@id="email"]').send_keys(fb_id)
 time.sleep(2)
 driver.find_element_by_xpath('//*[@id="pass"]').send_keys(fb_pw + '\n')
 time.sleep(2)
 
-크롤링
+    #크롤링
 
 l_search = []
 
