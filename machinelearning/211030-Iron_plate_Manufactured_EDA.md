@@ -1,6 +1,6 @@
 ## Done
 
-### Tips
+### Tips of EDA 
 
 - Make boolean Series list
 
