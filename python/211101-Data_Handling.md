@@ -193,22 +193,29 @@
 
 
 	- List_Tuple - sort() vs sorted()
-	1. `L.sort(reverse =True)`: inplace = True
 
-	2. `sorted(L, key= lambda x: abs(x-3), reverse = True)`
+
+		1. `L.sort(reverse =True)`: inplace = True
+
+	 	2. `sorted(L, key= lambda x: abs(x-3), reverse = True)`
 
 
 	- Series, DataFrame – sort_values()
-	`S.sort_values(ascending=False, na_position = first, key = lambda x: len(x))`
 
-	`df.sort_values(by=[‘name’,’type’], ascending =False, na_position = first)`
+
+		`S.sort_values(ascending=False, na_position = first, key = lambda x: len(x))`
+		
+		
+		`df.sort_values(by=[‘name’,’type’], ascending =False, na_position = first)`
 
 
 	- Series – value_counts() & unique() (== set())
 
-	`S.value_counts(ascending =False, normalize = True)`:Instead of count num, print ratio num -> Class Imbalance Problem
 
-	`S.unique()`: ndarray including Nan -> Determine whether Categorical or not by len(S.unique())
+		`S.value_counts(ascending =False, normalize = True)`:Instead of count num, print ratio num -> Class Imbalance Problem
+
+
+		`S.unique()`: ndarray including Nan -> Determine whether Categorical or not by len(S.unique())
 
 
 	- DataFrame.drop_duplicates(subset=[‘name’], keep=’last’)
