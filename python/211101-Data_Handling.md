@@ -37,15 +37,17 @@
 
 - numpy
 
-`np.zeros(shape)`: raw vector
-`np.arange(start, stop, step)`
-`np.linspace(start, stop, num)`: equidistant intervals
-`np.random.random(shape)` : random 0~1 matrix
-`np.random.normal(mean, std, shape)` : normal distribution
-`np.random.randint(start, end, shape) : start~end random matrix
+	- `np.zeros(shape)`: raw vector
+	- `np.arange(start, stop, step)`
+	- `np.linspace(start, stop, num)`: equidistant intervals
+	- `np.random.random(shape)` : random 0~1 matrix
+	- `np.random.normal(mean, std, shape)` : normal distribution
+	- `np.random.randint(start, end, shape)` : start~end random matrix
 
-	- X[I, j] <-> L[i][j]
-	- X[[‘a’,’b’,’c’]] : list index not 2-d concept
+	```X[I, j] <-> L[i][j]```
+	
+	
+	```X[[‘a’,’b’,’c’]]``` : list index not 2-d concept
 
 - Pandas
 
@@ -73,32 +75,43 @@
 
 	- nested iteration in comprehension paragraph
 
-`[[float(value) for value in line.split(‘,’)] for line data.split(‘\n’)]`
+	```
+	[[float(value) for value in line.split(‘,’)] for line data.split(‘\n’)]
+	```
 
 	- read()
-
-`os.chdir(path)`
-`f = open(‘test.txt’,’r’)`
-`data = f.read()`
-`f.close()`
-`data[:1000]`
+	
+	```
+	os.chdir(path)
+	f = open(‘test.txt’,’r’)
+	data = f.read()
+	f.close()
+	data[:1000]
+	```
 
 	- readline() : include ‘\n’
-`os.chdir(path)`
-`f = open(‘test.txt’,’r’)`
-`header = f.readline()`
-`data = []`
-`line= f.readline()`
-``while line: data.append(list(map(float,line.split(‘,’)))
-line=f.readline()``
-`f.close()` 
+
+	```
+	os.chdir(path)
+	f = open(‘test.txt’,’r’)
+	header = f.readline()
+	data = []
+	line= f.readline()
+	while line: data.append(list(map(float, line.split(‘,’) ) )
+	line=f.readline()
+	f.close()
+	```
+
 
 	- write() + with as
-`with open(‘test.csv’, ‘w’) as f:`
-`f.write(header)`
-`for line in data:`
-`f.write(‘,’.join(list(map(str, line))))`
-`f.write(‘\n’)`
+
+	```
+	with open(‘test.csv’, ‘w’) as f:
+	f.write(header)
+	for line in data:
+	f.write(‘,’.join(list(map(str, line))))
+	f.write(‘\n’)
+	```
 
 - Load & Save Data
 
@@ -111,6 +124,8 @@ line=f.readline()``
 	- df.to_excel: input lots of sheets into one excel
 
 `with pd.ExcelWriter(xlsx file path) as writer:` : load or save
+
+
 `df1.to_excel(writer, sheet_name=’sheet1’, index=False)`
 `df2.to_excel(writer, sheet_name=’sheet2’, index=False)`
 
@@ -119,35 +134,54 @@ line=f.readline()``
 	- pd.merge(df1, df2, left_on=’employee’, right_index=True)
 
 	- file names
-	1. os.listdir(path) : All of file names list
-	2. wb = xlrd.openworkbook(file, on_demand = True)
-wb.sheet_names() : All of sheet names in excel in list type
+		1. os.listdir(path) : All of file names list
+		2. All of sheet names in excel in list type :
+		```
+		wb = xlrd.openworkbook(file, on_demand = True)
+		wb.sheet_names()
+		```
 
 	- pd.concat()
 
 	1. CSV-for paragraph
-`for file in os.listdir(‘folder name’):
-`if ‘2015’in file:`
-`df = pd.read_csv(‘jjc/’+file, sep=’\t’)`
-`concat_df = pd.concat([merged_df, df], axis = 0, ignore_index = True)`
+
+	```
+	for file in os.listdir(‘folder name’):
+	if ‘2015’in file:
+	df = pd.read_csv(‘jjc/’+file, sep=’\t’)
+	concat_df = pd.concat([merged_df, df], axis = 0, ignore_index = True)
+	```
+
 
 	2. CSV-list comprehension (memory burden)
-`concat_df = pd.concat([pd.read_csv(‘jjc/’+file, sep=’\t’) for file in os.listdir(‘forder name’) if ‘2015’in file], axis = 0, ignore_index =True)
+
+	```
+	concat_df = pd.concat([pd.read_csv(‘jjc/’+file, sep=’\t’) for file in os.listdir(‘forder name’) if ‘2015’in file], axis = 0, ignore_index =True)
+	```
+
 
 	1. Excel-for paragraph
-`import xlrd`
-`wb = xlrd.open_workbook(‘test.xlsx’, on_demand =True)`
-`sheetnames = wb.sheet_names()`
-`sheetnames`
+	
+	```
+	import xlrd
+	wb = xlrd.open_workbook(‘test.xlsx’, on_demand =True)
+	sheetnames = wb.sheet_names()
+	sheetnames
+	```
 
-`merged_df = pd.DataFrame()`
-`for sn in sheetnames():`
-`df = pd.read_excel(‘test.xlsx’, sheet_name= sn, skiprows=range(6))`
-`df = df.iloc[:,1:]`
-`merged_df = pd.concat([merged_df, df], axis = 0, ignore_index =True)`
+	```
+	merged_df = pd.DataFrame()
+	for sn in sheetnames():
+	df = pd.read_excel(‘test.xlsx’, sheet_name= sn, skiprows=range(6))
+	df = df.iloc[:,1:]
+	merged_df = pd.concat([merged_df, df], axis = 0, ignore_index =True)
+	```
 
 	2. Excel-list comprehension (memory burden)
-`concat_df = pd.concat([pd.read_excel(‘test.xlsx’,sheet_name = sn, skiprows= range(6)).iloc[:,1:] for sn in sheet_names()], axis = 0, ignore_index = True)`
+
+	```
+	concat_df = pd.concat([pd.read_excel(‘test.xlsx’,sheet_name = sn, skiprows= range(6)).iloc[:,1:] for sn in sheet_names()], axis = 0, ignore_index = True)
+	```
 
 - Pivot(Result) == Groupby(Process)
 
@@ -157,23 +191,28 @@ wb.sheet_names() : All of sheet names in excel in list type
 
 - How to Order Data Structure
 
+
 	- List_Tuple - sort() vs sorted()
 	1. `L.sort(reverse =True)`: inplace = True
-`print(L)`
 
 	2. `sorted(L, key= lambda x: abs(x-3), reverse = True)`
 
+
 	- Series, DataFrame – sort_values()
-`S.sort_values(ascending=False, na_position = first, key = lambda x: len(x))`
+	`S.sort_values(ascending=False, na_position = first, key = lambda x: len(x))`
 
-`df.sort_values(by=[‘name’,’type’], ascending =False, na_position = first)`
+	`df.sort_values(by=[‘name’,’type’], ascending =False, na_position = first)`
 
-	- Series – value_counts() & unique() (- set())
-`value_counts(ascending =False, normalize = True)`:Instead of count num, print ratio num -> Class Imbalance Problem
- 
-`S.unique()`: ndarray including Nan -> Determine whether Categorical or not by len(S.unique())
+
+	- Series – value_counts() & unique() (== set())
+
+	`S.value_counts(ascending =False, normalize = True)`:Instead of count num, print ratio num -> Class Imbalance Problem
+
+	`S.unique()`: ndarray including Nan -> Determine whether Categorical or not by len(S.unique())
+
 
 	- DataFrame.drop_duplicates(subset=[‘name’], keep=’last’)
+
 
 - Indexer – df.loc[], df.iloc[]
 
@@ -187,13 +226,18 @@ wb.sheet_names() : All of sheet names in excel in list type
 
 	- Series.str.strip() : remove blank
 	- Series.str.contains(s) : Boolean data whether it includes str(s) or not
-	- Series.str.split(sep, expand) : expand (True : add new column or False: print result of list)
-`df[‘Serial_num’].str.split(‘-‘, expand = True).head()`
-`concat_df = pd.concat([df, `df[‘Serial_num’].str.split(‘-‘, expand = True)], axis =1)`
-`concat_df.rename({0:’공정’, 1:’제품’, 2:’식별자’}, axis=1, inplace= True)`
+	- Series.str.split(sep, expand=False) : expand (True : add new column or False: print result of list)
+
+	```
+	df[‘Serial_num’].str.split(‘-‘, expand = True).head()
+	concat_df = pd.concat([df, df[‘Serial_num’].str.split(‘-‘, expand = True)], axis =1)
+	concat_df.rename({0:’공정’, 1:’제품’, 2:’식별자’}, axis=1, inplace= True)
+	```
 
 	- Series.astype(str)
 
+
 ## To Do
 
-	- Visualization - Matplotlib.pyplot
+- Visualization 
+- Matplotlib.pyplot
