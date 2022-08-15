@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[2]:
+# In[1]:
 
 
 from transformers import ViTModel, ViTConfig, ViTFeatureExtractor
@@ -18,7 +18,7 @@ import numpy as np
 #    - line
 #    - plane
 
-# In[84]:
+# In[2]:
 
 
 #line
@@ -34,7 +34,7 @@ image = T.functional.resize(image, size=(224, 224), interpolation= T.functional.
 image.size
 
 
-# In[89]:
+# In[3]:
 
 
 plt.figure(figsize=(3,3))
@@ -42,15 +42,16 @@ plt.imshow(image)
 plt.show()
 
 
-# In[23]:
+# In[9]:
 
 
+plt.figure(figsize=(3,3))
 image = PIL.Image.open('./dataset/plane.png')
 plt.imshow(image)
 plt.show()
 
 
-# In[18]:
+# In[8]:
 
 
 image.size
@@ -58,7 +59,7 @@ image.size
 
 # # Load ViT Model
 
-# In[4]:
+# In[10]:
 
 
 # Initializing a ViT vit-base-patch16-224 style configuration
@@ -71,7 +72,7 @@ model = ViTModel(configuration)
 model.config
 
 
-# In[24]:
+# In[11]:
 
 
 # input transform
@@ -352,13 +353,12 @@ plt.show()
 
 # ## - shape of array
 
-# In[35]:
+# In[12]:
 
 
-# line array
+# line array - e.g) 5th layer
 
-for idx in range(12):
-    print(outputs.attentions[0][0][idx][0,1:].view(14,14))
+print(outputs.attentions[0][0][5][0,1:].view(14,14))
 
 
 # # 3. Hidden States by layers
@@ -636,12 +636,6 @@ plt.show()
 outputs.hidden_states[0].size()
 
 
-# In[67]:
-
-
-outputs.hidden_states[0]
-
-
 # In[71]:
 
 
@@ -654,14 +648,6 @@ hs_bef.size()
 
 hs_bef_wo_cls = hs_bef[1:,:]
 hs_bef_wo_cls.size()
-
-
-# In[74]:
-
-
-hs_bef_wo_cls[:,0].size()
-
-hs_bef_wo_cls[:,0].view(14,14)
 
 
 # In[82]:
