@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[306]:
+# In[2]:
 
 
 from transformers import ViTModel, ViTConfig, ViTFeatureExtractor
@@ -15,18 +15,34 @@ import numpy as np
 
 
 # # Datasets
-#    - cat
+#    - line
 #    - plane
 
-# In[ ]:
+# In[84]:
 
 
-# cat
-dataset = load_dataset("huggingface/cats-image")
-image_cat = dataset["test"]["image"][0]
+#line
+image = PIL.Image.open('./dataset/line.png')
+
+plt.style.use(['default'])
+plt.figure(figsize=(4,6))
+plt.imshow(image)
+plt.show()
+
+# resize-224
+image = T.functional.resize(image, size=(224, 224), interpolation= T.functional.InterpolationMode.LANCZOS) #size=(h,w)
+image.size
 
 
-# In[151]:
+# In[89]:
+
+
+plt.figure(figsize=(3,3))
+plt.imshow(image)
+plt.show()
+
+
+# In[23]:
 
 
 image = PIL.Image.open('./dataset/plane.png')
@@ -34,7 +50,7 @@ plt.imshow(image)
 plt.show()
 
 
-# In[153]:
+# In[18]:
 
 
 image.size
@@ -42,7 +58,7 @@ image.size
 
 # # Load ViT Model
 
-# In[17]:
+# In[4]:
 
 
 # Initializing a ViT vit-base-patch16-224 style configuration
@@ -55,7 +71,7 @@ model = ViTModel(configuration)
 model.config
 
 
-# In[388]:
+# In[24]:
 
 
 # input transform
@@ -70,7 +86,7 @@ with torch.no_grad():
     outputs = model(**inputs, output_attentions=True, output_hidden_states=True, interpolate_pos_encoding=True, return_dict=True)
 
 
-# In[155]:
+# In[25]:
 
 
 inputs['pixel_values'].size()
@@ -183,6 +199,8 @@ plt.show()
 #        - 12 layers
 #        - Size: (1 X 196)
 
+# # Plane.png
+
 # In[151]:
 
 
@@ -237,7 +255,7 @@ plt.show()
 # In[510]:
 
 
-# <All layers atttention map (Interpolated)>
+# <All layers cls token atttention map (Interpolated)>
 
 fig, axes = plt.subplots(nrows=4, ncols=3, figsize=(12, 13))
 plt.style.use(['seaborn'])
@@ -260,6 +278,87 @@ fig.colorbar(im, cax=cbar_ax)
 
 plt.title("Classification Token Attention Map by layer(Interpolated)", fontdict={'fontsize': 24}, loc='right')
 plt.show()
+
+
+# # Line.png
+
+# In[89]:
+
+
+plt.figure(figsize=(3,3))
+plt.imshow(image)
+plt.show()
+
+
+# In[33]:
+
+
+# <cls token atttention map by all layers (Interpolated)>
+
+fig, axes = plt.subplots(nrows=4, ncols=3, figsize=(12, 13))
+plt.style.use(['default'])
+cmap = cm.get_cmap('gray') # import matplotlib.cm as cm
+
+for idx, ax in enumerate(axes.flat):
+    cls_i = outputs.attentions[0][0][idx][0,1:].view(14,14)
+    #interpolation - "trilinear"
+    cls_i_224 = torch.nn.functional.interpolate(cls_i.unsqueeze(0).unsqueeze(0).unsqueeze(0), size=(1,224,224), mode='trilinear')
+    cls_i_tri = cls_i_224.squeeze()
+    im = ax.imshow(cls_i_tri, cmap=cmap)
+    ax.set_title(f"<{idx+1}th layer cls atttention>")
+    ax.set_axis_off()
+
+fig.subplots_adjust(right=0.8) # fig - palette adjust
+cbar_ax = fig.add_axes([0.85, 0.15, 0.04, 0.78]) #cbar [x, y, width, height]
+fig.colorbar(im, cax=cbar_ax)          
+# fig.colorbar(im, ax=axes.ravel().tolist())
+
+
+plt.title("Classification Token Attention Map by layer(Interpolated)", fontdict={'fontsize': 24, 'color':'black'}, loc='right')
+plt.show()
+
+
+# ## - what is the role of cls token?
+#    - attetion in terms of not cls token
+#    - 100th token (randomly)
+
+# In[36]:
+
+
+# <100th token atttention map by all layers (Interpolated)>
+
+fig, axes = plt.subplots(nrows=4, ncols=3, figsize=(12, 13))
+plt.style.use(['default'])
+cmap = cm.get_cmap('gray') # import matplotlib.cm as cm
+
+for idx, ax in enumerate(axes.flat):
+    cl_i = outputs.attentions[0][0][idx][100,1:].view(14,14)
+    #interpolation - "trilinear"
+    cls_i_224 = torch.nn.functional.interpolate(cls_i.unsqueeze(0).unsqueeze(0).unsqueeze(0), size=(1,224,224), mode='trilinear')
+    cls_i_tri = cls_i_224.squeeze()
+    im = ax.imshow(cls_i_tri, cmap=cmap)
+    ax.set_title(f"<{idx+1}th layer cls atttention>")
+    ax.set_axis_off()
+
+fig.subplots_adjust(right=0.8) # fig - palette adjust
+cbar_ax = fig.add_axes([0.85, 0.15, 0.04, 0.78]) #cbar [x, y, width, height]
+fig.colorbar(im, cax=cbar_ax)          
+# fig.colorbar(im, ax=axes.ravel().tolist())
+
+
+plt.title("100th Token Attention Map by layer(Interpolated)", fontdict={'fontsize': 24, 'color':'black'}, loc='right')
+plt.show()
+
+
+# ## - shape of array
+
+# In[35]:
+
+
+# line array
+
+for idx in range(12):
+    print(outputs.attentions[0][0][idx][0,1:].view(14,14))
 
 
 # # 3. Hidden States by layers
@@ -322,6 +421,8 @@ plt.show()
 #        - 768 channels -> What is meaning of channels in transformer?
 #        - Size: (197 X 768)
 
+# # plain.png
+
 # In[151]:
 
 
@@ -375,6 +476,7 @@ hs_last_wo_cls[:,0].view(14,14)
 
 
 # ## - visualization
+#    - last layer hidden state output
 
 # In[465]:
 
@@ -445,6 +547,147 @@ fig.colorbar(im, cax=cbar_ax)
 # fig.colorbar(im, ax=axes.ravel().tolist())
 
 plt.title("768 Channel of Last Hidden State (Interpolated)", fontdict={'fontsize': 24}, loc='right')
+plt.show()
+
+
+# # Line.png
+
+# In[89]:
+
+
+plt.figure(figsize=(3,3))
+plt.imshow(image)
+plt.show()
+
+
+# ## - visualization
+#    - last layer hidden state output
+#    - first layer hidden state output
+
+# ### - last layer hidden state output
+
+# In[39]:
+
+
+hs_last = outputs.last_hidden_state.squeeze(0)
+hs_last.size()
+
+
+# In[40]:
+
+
+# cls token
+
+hs_last_cls = hs_last[0,:]
+hs_last_cls.size()
+
+
+# In[41]:
+
+
+#without cls token
+
+hs_last_wo_cls = hs_last[1:,:]
+hs_last_wo_cls.size()
+
+
+# In[79]:
+
+
+# 1th channel visualization
+
+hs_last_wo_cls[:,0].size()
+
+hs_last_wo_cls[:,0].view(14,14).size()
+
+
+# In[44]:
+
+
+# <All channels last hidden state(Interpolated)>
+
+fig, axes = plt.subplots(nrows=32, ncols=24, figsize=(20, 30))
+plt.style.use(['seaborn'])
+cmap = cm.get_cmap('gray') # import matplotlib.cm as cm
+
+for idx, ax in enumerate(axes.flat):
+    hs_l_i = hs_last_wo_cls[:,idx].view(14,14)
+    #interpolation - "trilinear"
+    hs_l_224 = torch.nn.functional.interpolate(hs_l_i.unsqueeze(0).unsqueeze(0).unsqueeze(0), size=(1,224,224), mode='trilinear')
+    hs_l_tri = hs_l_224.squeeze()
+    im = ax.imshow(hs_l_tri, cmap=cmap)
+    ax.set_title(f"<{idx+1}>")
+    ax.set_axis_off()
+
+fig.subplots_adjust(right=0.85) # fig - palette adjust
+cbar_ax = fig.add_axes([0.9, 0.15, 0.03, 0.75]) #cbar [x, y, width, height]
+fig.colorbar(im, cax=cbar_ax)          
+# fig.colorbar(im, ax=axes.ravel().tolist())
+
+plt.title("768 Channel of Last Hidden State (Interpolated)", fontdict={'fontsize': 24}, loc='right')
+plt.show()
+
+
+# ### - 1th layer hidden state output
+
+# In[66]:
+
+
+outputs.hidden_states[0].size()
+
+
+# In[67]:
+
+
+outputs.hidden_states[0]
+
+
+# In[71]:
+
+
+hs_bef = outputs.hidden_states[0].squeeze(0)
+hs_bef.size()
+
+
+# In[72]:
+
+
+hs_bef_wo_cls = hs_bef[1:,:]
+hs_bef_wo_cls.size()
+
+
+# In[74]:
+
+
+hs_bef_wo_cls[:,0].size()
+
+hs_bef_wo_cls[:,0].view(14,14)
+
+
+# In[82]:
+
+
+# <All channels 1th hidden state(Interpolated)>
+
+fig, axes = plt.subplots(nrows=32, ncols=24, figsize=(20, 30))
+plt.style.use(['seaborn'])
+cmap = cm.get_cmap('gray') # import matplotlib.cm as cm
+
+for idx, ax in enumerate(axes.flat):
+    hs_b_i = hs_bef_wo_cls[:,idx].view(14,14)
+    #interpolation - "trilinear"
+    hs_b_224 = torch.nn.functional.interpolate(hs_b_i.unsqueeze(0).unsqueeze(0).unsqueeze(0), size=(1,224,224), mode='trilinear')
+    hs_b_tri = hs_b_224.squeeze()
+    im = ax.imshow(hs_b_tri, cmap=cmap)
+    ax.set_title(f"<{idx+1}>")
+    ax.set_axis_off()
+
+fig.subplots_adjust(right=0.85) # fig - palette adjust
+cbar_ax = fig.add_axes([0.9, 0.15, 0.03, 0.75]) #cbar [x, y, width, height]
+fig.colorbar(im, cax=cbar_ax)          
+# fig.colorbar(im, ax=axes.ravel().tolist())
+
+plt.title("768 Channel of 1th layer Hidden State (Interpolated)", fontdict={'fontsize': 24}, loc='right')
 plt.show()
 
 
