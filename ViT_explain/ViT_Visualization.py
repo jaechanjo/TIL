@@ -1,26 +1,15 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
-
-# !pip install transformers
-# !pip install datasets
-# !pip install seaborn
-# !pip install matplotlib
-
-
 # In[306]:
 
 
 from transformers import ViTModel, ViTConfig, ViTFeatureExtractor
 import torch
-from datasets import load_dataset
 import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import PIL
-import torch
 import torchvision.transforms as T
 import numpy as np
 
@@ -29,7 +18,7 @@ import numpy as np
 #    - cat
 #    - plane
 
-# In[146]:
+# In[ ]:
 
 
 # cat
@@ -87,6 +76,8 @@ with torch.no_grad():
 inputs['pixel_values'].size()
 
 
+# ## - class_token of last layer
+
 # In[389]:
 
 
@@ -94,6 +85,8 @@ inputs['pixel_values'].size()
 
 len(outputs.pooler_output), outputs.pooler_output.size() 
 
+
+# ## - hidden_state
 
 # In[390]:
 
@@ -103,18 +96,22 @@ len(outputs.pooler_output), outputs.pooler_output.size()
 len(outputs.hidden_states), outputs.hidden_states[0].size()
 
 
+# In[392]:
+
+
+#hidden state: 0: before 1th transformer block, 1~12: specific layerth transformer block output
+
+outputs.hidden_states[0] 
+
+
+# ## - attention maps 
+
 # In[391]:
 
 
 # attention map of every layers
 
 len(outputs.attentions[0][0]), outputs.attentions[0][0].size()
-
-
-# In[392]:
-
-
-outputs.hidden_states[0] #hidden state: 0: before 1th transformer block, 1~12: specific layerth transformer block output
 
 
 # In[393]:
@@ -125,7 +122,7 @@ outputs.hidden_states[0] #hidden state: 0: before 1th transformer block, 1~12: s
 outputs.attentions[0][0][0][outputs.attentions[0][0][0] < 0] 
 
 
-# # Attention Maps by layer
+# # 1. Attention Maps by layer
 #  - output.attentions
 #      - 12 layers
 #      - Size: (197 X 197)
@@ -145,6 +142,8 @@ outputs.attentions[0].size()
 # In[441]:
 
 
+# <1th layer attention map(197X197)>
+
 fig = plt.figure()
 plt.style.use(['seaborn'])
 cmap = cm.get_cmap('gray')
@@ -156,6 +155,8 @@ plt.show()
 
 # In[438]:
 
+
+# <All layers attention map(197X197)>
 
 fig, axes = plt.subplots(nrows=3, ncols=4, figsize=(20, 12))
 plt.style.use(['seaborn'])
@@ -176,7 +177,7 @@ for idx in range(len(outputs.attentions)):
 plt.show()
 
 
-# # Classification Token Attention Map by layer
+# # 2. Classification Token Attention Map by layer
 #    - outputs.attention
 #        - first row, without myself(cls_token)
 #        - 12 layers
@@ -193,6 +194,8 @@ plt.show()
 # In[442]:
 
 
+# <1th layer atttention map>
+
 plt.style.use(['default'])
 cmap = cm.get_cmap('gray')
 
@@ -204,8 +207,10 @@ plt.colorbar()
 plt.show()
 
 
-# In[436]:
+# In[509]:
 
+
+# <All layers atttention map>
 
 fig, axes = plt.subplots(nrows=4, ncols=3, figsize=(12, 13))
 plt.style.use(['seaborn'])
@@ -222,14 +227,17 @@ for row in range(4):
             ax.set_axis_off()
 
 fig.subplots_adjust(right=0.8)
-cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
+cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.78])
 fig.colorbar(im, cax=cbar_ax)      
 
+plt.title("Classification Token Attention Map by layer", fontdict={'fontsize': 24}, loc='right')
 plt.show()
 
 
-# In[496]:
+# In[510]:
 
+
+# <All layers atttention map (Interpolated)>
 
 fig, axes = plt.subplots(nrows=4, ncols=3, figsize=(12, 13))
 plt.style.use(['seaborn'])
@@ -250,18 +258,11 @@ fig.colorbar(im, cax=cbar_ax)
 # fig.colorbar(im, ax=axes.ravel().tolist())
 
 
-plt.title("Classification Token Attention Map by layer", fontdict={'fontsize': 24}, loc='right')
+plt.title("Classification Token Attention Map by layer(Interpolated)", fontdict={'fontsize': 24}, loc='right')
 plt.show()
 
 
-# In[499]:
-
-
-for idx in range(len(outputs.attentions)):
-    print(outputs.attentions[0][0][idx][0,1:])
-
-
-# # Hidden States by layers
+# # 3. Hidden States by layers
 #    - output.hidden_states
 #        - 13 (12 layers out + input into 1 layer)
 #        - Size: (197 X 768)
@@ -281,6 +282,8 @@ outputs.hidden_states[0].size()
 # In[447]:
 
 
+# <1th layer hidden state(197X768)>
+
 fig = plt.figure()
 plt.style.use(['seaborn'])
 cmap = cm.get_cmap('gray')
@@ -292,6 +295,8 @@ plt.show()
 
 # In[501]:
 
+
+# <All layers hidden state(197X768)>
 
 fig, axes = plt.subplots(nrows=4, ncols=4, figsize=(20, 12))
 plt.style.use(['seaborn'])
@@ -312,7 +317,7 @@ for idx in range(len(outputs.hidden_states)):
 plt.show()
 
 
-# # Hidden States of last layer by channel
+# # 4. Hidden States of last layer by channel
 #    - outputs.last_hidden_states
 #        - 768 channels -> What is meaning of channels in transformer?
 #        - Size: (197 X 768)
@@ -324,6 +329,9 @@ image = PIL.Image.open('./dataset/plane.png')
 plt.imshow(image)
 plt.show()
 
+
+# ## - preprocess
+#    - remove cls token 
 
 # In[457]:
 
@@ -366,8 +374,12 @@ hs_last_wo_cls[:,0].size()
 hs_last_wo_cls[:,0].view(14,14)
 
 
+# ## - visualization
+
 # In[465]:
 
+
+# <1th channel last hidden state>
 
 hs_1[:,0].view(14,14).size()
 
@@ -384,6 +396,8 @@ plt.show()
 
 # In[491]:
 
+
+# <All channels last hidden state>
 
 fig, axes = plt.subplots(nrows=32, ncols=24, figsize=(20, 30))
 plt.style.use(['seaborn'])
@@ -407,8 +421,10 @@ plt.title("768 Channel of Last Hidden State", fontdict={'fontsize': 24}, loc='ri
 plt.show()
 
 
-# In[497]:
+# In[511]:
 
+
+# <All channels last hidden state(Interpolated)>
 
 fig, axes = plt.subplots(nrows=32, ncols=24, figsize=(20, 30))
 plt.style.use(['seaborn'])
@@ -428,7 +444,7 @@ cbar_ax = fig.add_axes([0.9, 0.15, 0.03, 0.75]) #cbar [x, y, width, height]
 fig.colorbar(im, cax=cbar_ax)          
 # fig.colorbar(im, ax=axes.ravel().tolist())
 
-plt.title("768 Channel of Last Hidden State", fontdict={'fontsize': 24}, loc='right')
+plt.title("768 Channel of Last Hidden State (Interpolated)", fontdict={'fontsize': 24}, loc='right')
 plt.show()
 
 
@@ -550,27 +566,4 @@ plt.imshow(cls_1_lin)
 
 
 plt.imshow(cls_1_nr)
-
-
-# In[376]:
-
-
-fig, axes = plt.subplots(nrows=4, ncols=3, figsize=(15, 16))
-cmap = cm.get_cmap('gray') # import matplotlib.cm as cm
-
-for idx, ax in enumerate(axes.flat):
-    cls_i = outputs.attentions[0][0][idx][0,1:].view(14,14)
-    #interpolation - "bilinear"
-    cls_i_224 = torch.nn.functional.interpolate(cls_i.unsqueeze(0).unsqueeze(0), size=(224,224), mode='bilinear')
-    cls_i_bil = cls_i_224.squeeze()
-    im = ax.imshow(cls_i_bil, cmap=cmap)
-    ax.set_title(f"{idx+1}th atttention map")
-    ax.set_axis_off()
-
-fig.subplots_adjust(right=0.8) # fig - palette adjust
-cbar_ax = fig.add_axes([0.85, 0.15, 0.04, 0.7]) #cbar [x, y, width, height]
-fig.colorbar(im, cax=cbar_ax)          
-# fig.colorbar(im, ax=axes.ravel().tolist())
-
-plt.show()
 
